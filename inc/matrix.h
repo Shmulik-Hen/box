@@ -1,5 +1,5 @@
-#ifndef _MATRIX_H
-#define _MATRIX_H
+#ifndef __MATRIX_H__
+#define __MATRIX_H__
 #include "unit.h"
 #include "attrib.h"
 #include "vector.h"

@@ -1,6 +1,6 @@
-#ifndef _UNIT_H
-#define _UNIT_H
-#include <fstream.h>
+#ifndef __UNIT_H__
+#define __UNIT_H__
+// #include <fstream.h>
 
 class unit
 {

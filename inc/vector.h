@@ -1,7 +1,7 @@
-#ifndef _VECTOR_H
-#define _VECTOR_H
+#ifndef __VECTOR_H__
+#define __VECTOR_H__
 #include "unit.h"
-#include <iostream.h>
+// #include <iostream.h>
 
 enum coords
 {

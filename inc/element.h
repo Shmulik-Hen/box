@@ -1,10 +1,10 @@
-#ifndef _ELEMENT_H
-#define _ELEMENT_H
+#ifndef __ELEMENT_H__
+#define __ELEMENT_H__
 #include "matrix.h"
 #include "attrib.h"
 #include "polygon.h"
 #include "tree.h"
-#include "list.cpp"
+// #include "list.cpp"
 #include "polyelem.h"
 
 class element : public treenode

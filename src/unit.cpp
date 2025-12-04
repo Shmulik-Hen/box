@@ -1,5 +1,5 @@
 #include "unit.h"
-#include "types.def"
+#include "common.h"
 #include "utils.h"
 
 long SIN[] = {0, 12, 25, 37, 50, 62, 75, 87, 100, 112, 125, 137, 150, 162, 175, 187, 199, 212, 224, 236, 248, 260, 273, 285, 297,

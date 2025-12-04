@@ -1,7 +1,7 @@
-#ifndef _ATTRIB_H
-#define _ATTRIB_H
+#ifndef __ATTRIB_H__
+#define __ATTRIB_H__
 #include "unit.h"
-#include <iostream.h>
+// #include <iostream.h>
 
 class matrix;
 class attrib

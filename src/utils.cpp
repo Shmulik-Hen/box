@@ -1,7 +1,7 @@
 #include "utils.h"
-#include <process.h>
+// #include <process.h>
 // #include "graphics.h"
-#include <graphics.h>
+// #include <graphics.h>
 
 void error(const char *s1, const char *s2)
 {

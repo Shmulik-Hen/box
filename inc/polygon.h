@@ -1,9 +1,9 @@
-#ifndef _POLYGON_H
-#define _POLYGON_H
+#ifndef __POLYGON_H__
+#define __POLYGON_H__
 #include "vector.h"
-#include "list.cpp"
-#include "types.def"
-#include <fstream.h>
+// #include "list.cpp"
+#include "common.h"
+// #include <fstream.h>
 
 class polygon
 {

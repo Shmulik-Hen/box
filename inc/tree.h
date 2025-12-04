@@ -1,5 +1,5 @@
-#ifndef _TREE_H
-#define _TREE_H
+#ifndef __TREE_H__
+#define __TREE_H__
 #include <stddef.h>
 
 class treenode

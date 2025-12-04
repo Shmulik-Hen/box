@@ -1,5 +1,5 @@
 #include "polyelem.h"
-#include <graphics.h>
+// #include <graphics.h>
 // #include "graphics.h"
 
 extern vector view;

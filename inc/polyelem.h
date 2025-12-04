@@ -1,5 +1,5 @@
-#ifndef _POLYELEM_H
-#define _POLYELEM_H
+#ifndef __POLYELEM_H__
+#define __POLYELEM_H__
 #include "queue.h"
 #include "unit.h"
 #include "vector.h"

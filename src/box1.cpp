@@ -1,10 +1,10 @@
 #include "element.h"
 #include "polyelem.h"
-#include <graphics.h>
+// #include <graphics.h>
 // #include "graphics.h"
-#include <conio.h>
+// #include <conio.h>
 #include <stdlib.h>
-#include <dos.h>
+// #include <dos.h>
 
 extern list<polygon> poly_list;
 extern matrix UNIT_MAT;

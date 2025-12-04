@@ -1,3 +1,5 @@
+#ifndef __COMMON_H__
+#define __COMMON_H__
 #define MAX_NAME 10
 #define MAX_LINE 80
 #define max(x,y) (((x)>(y)) ? (x) : (y))
@@ -6,3 +8,4 @@ typedef char LINE[MAX_LINE+1];
 typedef char NAME[MAX_NAME+1];
 typedef int (*comp)(const void*, const void*);
 typedef int (*cmp)(const void*);
+#endif
