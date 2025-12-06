@@ -7,7 +7,7 @@
 #include "common.h"
 
 using std::ifstream;
-class polygon
+class polygon : list<polygon>
 {
 	NAME name;
 	friend class polyelem;
@@ -19,6 +19,7 @@ public:
 	vector fill;
 	vector normal;
 	list<vector> points;
+	static list<polygon> poly_list;
 
 	polygon();
 	~polygon();

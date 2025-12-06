@@ -26,7 +26,7 @@ void polyelem::print()
 	poly->print();
 }
 
-polyelem *merge(polyelem *l1, polyelem *l2)
+polyelem *polyelem::merge(polyelem *l1, polyelem *l2)
 {
 	polyelem *first, *temp, *last = NULL;
 
@@ -57,7 +57,7 @@ polyelem *merge(polyelem *l1, polyelem *l2)
 	return first;
 }
 
-polyelem *merge_sort()
+polyelem *polyelem::merge_sort()
 {
 	polyelem *l1, *l2, *l3;
 	l1 = (polyelem *)pop();

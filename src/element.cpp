@@ -120,7 +120,7 @@ void element::read(ifstream &f)
 			break;
 		case 's':
 			read_word(f, line);
-			po = find_poly(poly_list, line);
+			po = find_poly(polygon::poly_list, line);
 			if (po)
 				planes.insert(po);
 			else

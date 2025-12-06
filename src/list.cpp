@@ -1,3 +1,4 @@
+#if 0
 #include <stddef.h>
 #include "list.h"
 #include "utils.h"
@@ -82,3 +83,4 @@ int list<T>::empty()
 {
  return (head==NULL);
 }*/
+#endif // 0

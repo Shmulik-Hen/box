@@ -23,7 +23,7 @@ void queue::push()
 	}
 }
 
-queue *pop()
+queue *queue::pop()
 {
 	if (!queue::head)
 		return NULL;

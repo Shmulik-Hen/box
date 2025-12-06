@@ -9,6 +9,8 @@
 
 class polyelem : public queue
 {
+	polyelem *merge(polyelem *, polyelem *);
+
 public:
 
 	matrix mat;
@@ -19,7 +21,6 @@ public:
 
 	polyelem();
 	~polyelem();
-	polyelem *merge(polyelem *, polyelem *);
 	polyelem *merge_sort();
 	void print();
 	void show();

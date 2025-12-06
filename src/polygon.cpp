@@ -9,7 +9,7 @@ using std::cout;
 using std::endl;
 using std::ios;
 
-list<polygon> poly_list;
+// list<polygon> polygon::poly_list;
 char *str;
 
 polygon::polygon()

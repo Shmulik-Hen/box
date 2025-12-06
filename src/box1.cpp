@@ -15,6 +15,7 @@
 using std::ios;
 
 // extern list<polygon> poly_list;
+list<polygon> polygon::poly_list;
 extern matrix UNIT_MAT;
 vector view(0, 0, -1000000);
 vector n_light(0, 0, -1024);
@@ -59,7 +60,7 @@ int main()
 		case 'p':
 			poly = new polygon;
 			poly->read(f);
-			poly_list.insert(poly);
+			polygon::poly_list.insert(poly);
 			break;
 		case 'e':
 			elem1 = new element;
