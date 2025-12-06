@@ -1,7 +1,12 @@
 #ifndef __VECTOR_H__
 #define __VECTOR_H__
+
+#include <fstream>
 #include "unit.h"
-// #include <iostream.h>
+
+using std::ifstream;
+using std::istream;
+using std::ostream;
 
 enum coords
 {
@@ -9,12 +14,15 @@ enum coords
 	Y,
 	Z
 };
+
 class matrix;
+
 class vector
 {
 public:
 
 	unit coord[3];
+
 	vector();
 	~vector();
 	// vector(long,long,long);
@@ -31,4 +39,5 @@ public:
 	friend istream &operator>>(istream &, vector &);
 	void read(ifstream &);
 };
-#endif
+
+#endif //__VECTOR_H__

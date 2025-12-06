@@ -1,6 +1,12 @@
-#include "element.h"
 #include <string.h>
-#include <stdlib.h>
+#include <iostream>
+#include <ios>
+#include "element.h"
+#include "utils.h"
+
+using std::cout;
+using std::endl;
+using std::ios;
 
 char *st;
 extern list<polygon> poly_list;
@@ -41,7 +47,7 @@ int elem_comp(const void *node)
 	return (!strcmp(st, p->name));
 }
 
-void element::update(attrib &a)
+void element::update(const attrib &a)
 {
 	att += a;
 }

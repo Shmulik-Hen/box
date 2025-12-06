@@ -1,6 +1,12 @@
+#include <iostream>
+#include "queue.h"
+#include "list.h"
 #include "polyelem.h"
 // #include <graphics.h>
 // #include "graphics.h"
+
+using std::cout;
+using std::endl;
 
 extern vector view;
 

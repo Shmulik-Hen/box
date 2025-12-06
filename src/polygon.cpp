@@ -1,7 +1,13 @@
-#include "polygon.h"
-#include "utils.h"
+#include <iostream>
+#include <ios>
 #include <string.h>
 #include <stdlib.h>
+#include "polygon.h"
+#include "utils.h"
+
+using std::cout;
+using std::endl;
+using std::ios;
 
 list<polygon> poly_list;
 char *str;

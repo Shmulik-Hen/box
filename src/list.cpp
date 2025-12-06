@@ -1,8 +1,6 @@
-#ifndef _LIST_CPP
-#define _LIST_CPP
+#include <stddef.h>
 #include "list.h"
 #include "utils.h"
-#include <stddef.h>
 
 template <class T> list<T>::list()
 {
@@ -84,4 +82,3 @@ int list<T>::empty()
 {
  return (head==NULL);
 }*/
-#endif

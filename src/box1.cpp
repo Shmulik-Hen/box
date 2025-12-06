@@ -1,10 +1,16 @@
+#include <ios>
 #include "element.h"
 #include "polyelem.h"
+#include "utils.h"
+#include "attrib.h"
+
 // #include <graphics.h>
 // #include "graphics.h"
 // #include <conio.h>
-#include <stdlib.h>
+// #include <stdlib.h>
 // #include <dos.h>
+
+using std::ios;
 
 extern list<polygon> poly_list;
 extern matrix UNIT_MAT;
@@ -24,7 +30,7 @@ palette pal_256_colors[256];
 void init_palette();
 void get_palette(palette buff[], int colors);
 void set_palette(palette buff[], int colors);
-int huge DetectVGA256();
+// int huge DetectVGA256();
 
 void main()
 {
@@ -36,10 +42,12 @@ void main()
 	polyelem *pe;
 	attrib a(1, 1, 1, 0, 0, 0, 1024);
 
-	f.open(filename, ios::in | ios::nocreate);
+	f.open(filename, ios::in);
 	if (!f)
 		error("file not found:", filename);
+
 	f.unsetf(ios::skipws);
+
 	while (!f.eof()) {
 		while ((!read_word(f, line)) && (!f.eof()))
 			;
@@ -67,7 +75,7 @@ void main()
 		}
 	}
 	f.close();
-
+#if 0
 	int Gd = DETECT, Gm;
 	installuserdriver("SVGA256", DetectVGA256);
 	initgraph(&Gd, &Gm, "");
@@ -80,7 +88,7 @@ void main()
 	while (!kbhit()) {
 		elem2->update(attrib(0, 3, 7, 0, 0, 0, 1024));
 		update_tree(root, UNIT_MAT, UNIT_MAT);
-		pe = merge_sort();
+		pe->merge_sort();
 		clearviewport();
 		while (pe) {
 			polyelem *tmp = pe;
@@ -91,8 +99,10 @@ void main()
 		delay(17);
 	}
 	closegraph();
+#endif // 0
 }
 
+#if 0
 void init_palette()
 {
 	int i, j;
@@ -147,3 +157,4 @@ int huge DetectVGA256()
 		 return Vid;
 	*/
 }
+#endif // 0

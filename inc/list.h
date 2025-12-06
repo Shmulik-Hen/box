@@ -8,8 +8,9 @@ template <class T> class list
 		T *item;
 		tag_link *next;
 	} link;
+
 	link *head;
-	link *current;
+	*link *current;
 
 public:
 
@@ -20,4 +21,5 @@ public:
 	T *next();
 	T *search(int (*comp)(const void *));
 };
-#endif
+
+#endif //__LIST_H__

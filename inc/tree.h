@@ -1,7 +1,7 @@
 #ifndef __TREE_H__
 #define __TREE_H__
-#include <stddef.h>
 
+#include "stdlib.h"
 class treenode
 {
 protected:
@@ -16,4 +16,5 @@ public:
 	void addnode(treenode *parrent);
 	treenode *search(treenode *, int (*comp)(const void *));
 };
-#endif
+
+#endif //__TREE_H__

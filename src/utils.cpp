@@ -1,7 +1,11 @@
+#include <iostream>
 #include "utils.h"
 // #include <process.h>
 // #include "graphics.h"
 // #include <graphics.h>
+
+using std::cerr;
+using std::cout;
 
 void error(const char *s1, const char *s2)
 {

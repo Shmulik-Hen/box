@@ -1,5 +1,6 @@
 #ifndef __MATRIX_H__
 #define __MATRIX_H__
+
 #include "unit.h"
 #include "attrib.h"
 #include "vector.h"
@@ -19,4 +20,5 @@ public:
 	friend void prep_rot_mat(matrix &, const attrib &);
 	friend vector operator*(const matrix &, const vector &);
 };
-#endif
+
+#endif //__MATRIX_H__

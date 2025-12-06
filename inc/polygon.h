@@ -1,10 +1,12 @@
 #ifndef __POLYGON_H__
 #define __POLYGON_H__
-#include "vector.h"
-// #include "list.cpp"
-#include "common.h"
-// #include <fstream.h>
 
+#include <fstream>
+#include "vector.h"
+#include "list.h"
+#include "common.h"
+
+using std::ifstream;
 class polygon
 {
 	NAME name;
@@ -17,6 +19,7 @@ public:
 	vector fill;
 	vector normal;
 	list<vector> points;
+
 	polygon();
 	~polygon();
 	vector find_fill();
@@ -27,4 +30,5 @@ public:
 	void read(ifstream &);
 	void print();
 };
-#endif
+
+#endif //__POLYGON_H__

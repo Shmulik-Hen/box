@@ -1,7 +1,12 @@
 #ifndef __ATTRIB_H__
 #define __ATTRIB_H__
+
+#include <iostream>
 #include "unit.h"
-// #include <iostream.h>
+
+using std::ifstream;
+using std::istream;
+using std::ostream;
 
 class matrix;
 class attrib
@@ -24,4 +29,5 @@ public:
 	friend istream &operator>>(istream &, attrib &);
 	void read(ifstream &);
 };
-#endif
+
+#endif //__ATTRIB_H__

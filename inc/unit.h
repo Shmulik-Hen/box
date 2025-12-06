@@ -1,6 +1,11 @@
 #ifndef __UNIT_H__
 #define __UNIT_H__
-// #include <fstream.h>
+
+#include <fstream>
+
+using std::ifstream;
+using std::istream;
+using std::ostream;
 
 class unit
 {
@@ -38,4 +43,5 @@ public:
 
 const unit UNIT(1024);
 const unit ZERO(0);
-#endif
+
+#endif //__UNIT_H__

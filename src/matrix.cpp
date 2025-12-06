@@ -1,6 +1,12 @@
 #include "matrix.h"
 
-unit unt[4][4] = {{UNIT, 0, 0, 0}, {0, UNIT, 0, 0}, {0, 0, UNIT, 0}, {0, 0, 0, UNIT}};
+// clang-format off
+unit unt[4][4]={
+	{UNIT,  0,     0,     0  },
+	{ 0,   UNIT,   0,     0  },
+	{ 0,    0,    UNIT,   0  },
+	{ 0,    0,     0,    UNIT} };
+// clang-format on
 
 matrix UNIT_MAT(unt);
 

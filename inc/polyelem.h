@@ -1,5 +1,6 @@
 #ifndef __POLYELEM_H__
 #define __POLYELEM_H__
+
 #include "queue.h"
 #include "unit.h"
 #include "vector.h"
@@ -15,11 +16,13 @@ public:
 	char color;
 	unit depth;
 	polyelem *next;
+
 	polyelem();
 	~polyelem();
-	friend polyelem *merge(polyelem *, polyelem *);
-	friend polyelem *merge_sort();
+	polyelem *merge(polyelem *, polyelem *);
+	polyelem *merge_sort();
 	void print();
 	void show();
 };
-#endif
+
+#endif //__POLYELEM_H__
