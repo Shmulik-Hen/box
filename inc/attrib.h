@@ -2,36 +2,46 @@
 #define __ATTRIB_H__
 
 #include <iostream>
+#include "common.h"
 #include "unit.h"
+
+namespace attrib_ns
+{
 
 using std::ifstream;
 using std::istream;
 using std::ostream;
+using unit_ns::unit;
 
-class matrix;
 class attrib
 {
-	unit deg_x{0};
-	unit deg_y{0};
-	unit deg_z{0};
-	unit off_x{0};
-	unit off_y{0};
-	unit off_z{0};
-	unit zoom{0};
+	unit deg_x{unit_ns::ZERO};
+	unit deg_y{unit_ns::ZERO};
+	unit deg_z{unit_ns::ZERO};
+	unit off_x{unit_ns::ZERO};
+	unit off_y{unit_ns::ZERO};
+	unit off_z{unit_ns::ZERO};
+	unit zoom{unit_ns::ZERO};
 
 public:
 
 	attrib();
 	~attrib();
 	attrib(unit, unit, unit, unit, unit, unit, unit);
-	friend attrib operator+(const attrib &, const attrib &);
+	attrib operator+(const attrib &);
 	attrib &operator+=(const attrib &);
-	friend void prep_gen_mat(matrix &, const attrib &);
-	friend void prep_rot_mat(matrix &, const attrib &);
+	unit get_deg_x() const { return deg_x; };
+	unit get_deg_y() const { return deg_y; };
+	unit get_deg_z() const { return deg_z; };
+	unit get_off_x() const { return off_x; };
+	unit get_off_y() const { return off_y; };
+	unit get_off_z() const { return off_z; };
+	unit get_zoom() const { return zoom; };
+	bool read(ifstream &);
+	void print() const;
 	friend ostream &operator<<(ostream &, const attrib &);
 	friend istream &operator>>(istream &, attrib &);
-	void read(ifstream &);
-	void print();
 };
 
+} // namespace attrib_ns
 #endif //__ATTRIB_H__

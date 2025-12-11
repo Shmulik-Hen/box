@@ -1,27 +1,34 @@
 #include <stdlib.h>
 #include "tree.h"
 
-void treenode::addnode(treenode *parrent)
+namespace tree_ns
+{
+
+void tree::addnode(tree *parrent)
 {
 	if (!parrent)
 		parrent = this;
 	else {
-		this->next = parrent->son;
-		parrent->son = this;
+		this->sibling = parrent->child;
+		parrent->child = this;
 	}
 }
 
-treenode *treenode::search(treenode *root, int (*comp)(const void *))
+tree *tree::search(tree *root, int (*comp)(const void *)) const
 {
-	treenode *p;
+	tree *p;
 
 	if (!root)
-		return NULL;
+		return nullptr;
+
 	if (comp(root))
 		return root;
-	p = search(root->son, comp);
+
+	p = search(root->child, comp);
 	if (p)
 		return p;
 	else
-		return (search(root->next, comp));
+		return (search(root->sibling, comp));
 }
+
+} // namespace tree_ns

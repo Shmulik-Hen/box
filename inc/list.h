@@ -1,3 +1,4 @@
+#if 0
 #ifndef __LIST_H__
 #define __LIST_H__
 
@@ -6,8 +7,8 @@ template <class T> class list
 {
 	struct link
 	{
-		T *item{NULL};
-		link *next{NULL};
+		T *item{nullptr};
+		link *next{nullptr};
 	};
 
 	link *head;
@@ -15,7 +16,7 @@ template <class T> class list
 
 public:
 
-	list() : head{NULL}, current{NULL} {};
+	list() : head{nullptr}, current{nullptr} {};
 
 	~list()
 	{
@@ -35,7 +36,7 @@ public:
 		if (!temp)
 			error("not enough memory in list::insert()");
 		temp->item = newitem;
-		temp->next = NULL;
+		temp->next = nullptr;
 		if (!head)
 			head = temp;
 		else {
@@ -50,7 +51,7 @@ public:
 		if (current)
 			return current->item;
 		else
-			return NULL;
+			return nullptr;
 	};
 
 	T *next()
@@ -59,7 +60,7 @@ public:
 		if (current)
 			return current->item;
 		else
-			return NULL;
+			return nullptr;
 	};
 
 	T *search(int (*comp)(const void *))
@@ -70,8 +71,9 @@ public:
 				return temp->item;
 			temp = temp->next;
 		}
-		return NULL;
+		return nullptr;
 	};
 };
 
 #endif //__LIST_H__
+#endif // 0

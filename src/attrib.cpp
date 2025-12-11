@@ -1,5 +1,8 @@
 #include "attrib.h"
 
+namespace attrib_ns
+{
+
 attrib::attrib()
 {
 }
@@ -8,8 +11,7 @@ attrib::~attrib()
 {
 }
 
-attrib::attrib(unit dx, unit dy, unit dz, unit ox, unit oy, unit oz, unit z) :
-	deg_x{dx}, deg_y{dy}, deg_z{dz}, off_x{ox}, off_y{oy}, off_z{oz}, zoom{z}
+attrib::attrib(unit dx, unit dy, unit dz, unit ox, unit oy, unit oz, unit z) : deg_x{dx}, deg_y{dy}, deg_z{dz}, off_x{ox}, off_y{oy}, off_z{oz}, zoom{z}
 {
 }
 
@@ -32,10 +34,38 @@ attrib &attrib::operator+=(const attrib &a)
 	return *this;
 }
 
+bool attrib::read(ifstream &f)
+{
+	bool rc = false;
+	printf("attrib::read \n");
+	rc += deg_x.read(f);
+	rc += deg_y.read(f);
+	rc += deg_z.read(f);
+	rc += off_x.read(f);
+	rc += off_y.read(f);
+	rc += off_z.read(f);
+	rc += zoom.read(f);
+	if (!rc) {
+		printf("attrib::read error\n");
+	}
+	return rc;
+}
+
+void attrib::print() const
+{
+	printf("attrib:\n");
+	deg_x.print();
+	deg_y.print();
+	deg_z.print();
+	off_x.print();
+	off_y.print();
+	off_z.print();
+	zoom.print();
+}
+
 ostream &operator<<(ostream &o, const attrib &a)
 {
-	return o << '(' << a.deg_x << ',' << a.deg_y << ',' << a.deg_z << ',' << a.off_x << ',' << a.off_y << ',' << a.off_z << ','
-		 << a.zoom << ')';
+	return o << '(' << a.deg_x << ',' << a.deg_y << ',' << a.deg_z << ',' << a.off_x << ',' << a.off_y << ',' << a.off_z << ',' << a.zoom << ')';
 }
 
 istream &operator>>(istream &i, attrib &a)
@@ -50,25 +80,4 @@ istream &operator>>(istream &i, attrib &a)
 	return i;
 }
 
-void attrib::read(ifstream &f)
-{
-	printf("attrib: \n");
-	deg_x.read(f);
-	deg_y.read(f);
-	deg_z.read(f);
-	off_x.read(f);
-	off_y.read(f);
-	off_z.read(f);
-	zoom.read(f);
-}
-void attrib::print()
-{
-	printf("attrib:\n");
-	deg_x.print();
-	deg_y.print();
-	deg_z.print();
-	off_x.print();
-	off_y.print();
-	off_z.print();
-	zoom.print();
-}
+} // namespace attrib_ns

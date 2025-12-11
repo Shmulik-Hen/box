@@ -30,7 +30,7 @@ int read_word(ifstream &f, char *word)
 			word[length++] = c;
 	}
 	word[length] = '\0';
-	// printf("read_word: %s, %d\n", word, length);
+	printf("read_word: %s, %d\n", word, length);
 	return length;
 }
 

@@ -1,37 +1,53 @@
 #ifndef __ELEMENT_H__
 #define __ELEMENT_H__
 
+#include <fstream>
+#include <list>
+#include <string>
+
+#include "common.h"
 #include "attrib.h"
-#include "list.h"
 #include "matrix.h"
-#include "polyelem.h"
 #include "polygon.h"
-#include "tree.h"
+#include "unit.h"
 
-class element : public treenode
+namespace element_ns
 {
-	NAME name{""};
-	int dirty_flag{0};
-	int active_flag{0};
-	attrib att;
-	matrix gen_mat;
-	matrix rot_mat;
-	list<polygon> planes;
-	friend class ployelem;
 
+using attrib_ns::attrib;
+using matrix_ns::matrix;
+using polygon_ns::polygon;
+using std::ifstream;
+using std::list;
+using std::string;
+using unit_ns::unit;
+
+class element : public polygon,
+		public matrix
+{
 public:
 
-	NAME parrent{""};
+	typedef list<element> elem_list;
 
 	element();
 	~element();
-	element *find_elem(const char *);
-	void update(const attrib &);
-	friend int elem_comp(const void *);
-	friend void update_tree(element *, matrix, matrix);
-	friend void printall(element *);
-	void read(ifstream &);
-	void print();
+	const element *find_elem(const elem_list *, const string &);
+	matrix &get_gen_matrix() { return gen_mat; };
+	matrix &get_rot_matrix() { return rot_mat; };
+	bool read(ifstream &);
+	void print() const;
+	void update(const attrib &, matrix &, matrix &);
+
+private:
+
+	typedef elem_list::const_iterator elem_it;
+
+	string *name{nullptr};
+	pol_list *polygons;
+
+	matrix gen_mat;
+	matrix rot_mat;
 };
 
+} // namespace element_ns
 #endif //__ELEMENT_H__

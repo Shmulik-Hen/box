@@ -1,8 +1,12 @@
+#if 0
 #include <stdlib.h>
 #include "queue.h"
 
-queue *queue::head = NULL;
-queue *queue::tail = NULL;
+namespace queue_ns
+{
+
+queue *queue::head = nullptr;
+queue *queue::tail = nullptr;
 
 queue::queue()
 {
@@ -25,11 +29,14 @@ void queue::push()
 queue *queue::pop()
 {
 	if (!queue::head)
-		return NULL;
+		return nullptr;
 	queue *temp = queue::head;
 	queue::head = queue::head->nextq;
-	temp->nextq = NULL;
+	temp->nextq = nullptr;
 	if (!queue::head)
-		queue::tail = NULL;
+		queue::tail = nullptr;
 	return temp;
 }
+
+} // namespace queue_ns
+#endif // 0

@@ -5,7 +5,7 @@
 
 template <class T> list<T>::list()
 {
-	current = head = NULL;
+	current = head = nullptr;
 }
 
 template <class T> list<T>::~list()
@@ -26,7 +26,7 @@ template <class T> void list<T>::insert(T *newitem)
 	if (!temp)
 		error("not enough memory in list::insert()");
 	temp->item = newitem;
-	temp->next = NULL;
+	temp->next = nullptr;
 	if (!head)
 		head = temp;
 	else {
@@ -41,7 +41,7 @@ template <class T> T *list<T>::first()
 	if (current)
 		return current->item;
 	else
-		return NULL;
+		return nullptr;
 }
 
 template <class T> T *list<T>::next()
@@ -50,7 +50,7 @@ template <class T> T *list<T>::next()
 	if (current)
 		return current->item;
 	else
-		return NULL;
+		return nullptr;
 }
 /*
 template<class T>
@@ -63,7 +63,7 @@ T* list<T>::find(const T& t,int(*comp)(const void*,const void*))
       return temp->item;
     temp=temp->next;
    }
- return NULL;
+ return nullptr;
 } */
 
 template <class T> T *list<T>::search(int (*comp)(const void *))
@@ -74,13 +74,13 @@ template <class T> T *list<T>::search(int (*comp)(const void *))
 			return temp->item;
 		temp = temp->next;
 	}
-	return NULL;
+	return nullptr;
 }
 
 /*
 template<class T>
 int list<T>::empty()
 {
- return (head==NULL);
+ return (head==nullptr);
 }*/
 #endif // 0

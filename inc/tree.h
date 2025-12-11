@@ -2,19 +2,24 @@
 #define __TREE_H__
 
 #include "stdlib.h"
-class treenode
+
+namespace tree_ns
+{
+
+class tree
 {
 protected:
 
-	treenode *next{NULL};
-	treenode *son{NULL};
+	tree *sibling{nullptr};
+	tree *child{nullptr};
 
 public:
 
-	treenode() {};
-	~treenode() {};
-	void addnode(treenode *parrent);
-	treenode *search(treenode *, int (*comp)(const void *));
+	tree() {};
+	~tree() {};
+	void addnode(tree *parrent);
+	tree *search(tree *, int (*comp)(const void *)) const;
 };
 
+} // namespace tree_ns
 #endif //__TREE_H__

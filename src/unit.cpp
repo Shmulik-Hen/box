@@ -1,6 +1,8 @@
 #include "unit.h"
-#include "common.h"
 #include "utils.h"
+
+namespace unit_ns
+{
 
 // clang-format off
 long SIN[]={
@@ -89,14 +91,6 @@ long SIN[]={
 
 long *COS = &SIN[128]; /* cos(x) = sin(x+"90")	*/
 
-unit::unit()
-{
-}
-
-unit::~unit()
-{
-}
-
 unit::unit(const long &n)
 {
 	num = n;
@@ -161,6 +155,49 @@ unit::operator long()
 	return num;
 }
 
+bool unit::read(ifstream &f)
+{
+	LINE line;
+	printf("unit::read \n");
+	while (!read_word(f, line))
+		;
+	num = convert(line);
+	printf("unit::read %s, %d\n", line, (int)num);
+	return true;
+}
+
+void unit::print() const
+{
+	printf("          unit: %d\n", (int)num);
+}
+
+long convert(const char *s)
+{
+	long temp = 0, sign = 1, n = 0;
+	int index = 0;
+	while (s[index]) {
+		switch (s[index]) {
+		case '-':
+			sign = -1;
+		case '+':
+			break;
+		case '.':
+			n = 1;
+			break;
+		default:
+			temp = temp * 10 + (long)(s[index] - '0');
+			n = n * 10;
+			break;
+		}
+		index++;
+	}
+
+	if (!n)
+		n = 1;
+
+	return (((sign * temp) << 10) / n);
+}
+
 int operator>(const unit &n1, const unit &n2)
 {
 	return (n1.num > n2.num);
@@ -214,31 +251,6 @@ unit sqrt(const unit &u)
 	return unit(root);
 }
 
-long convert(const char *s)
-{
-	long temp = 0, sign = 1, n = 0;
-	int index = 0;
-	while (s[index]) {
-		switch (s[index]) {
-		case '-':
-			sign = -1;
-		case '+':
-			break;
-		case '.':
-			n = 1;
-			break;
-		default:
-			temp = temp * 10 + (long)(s[index] - '0');
-			n = n * 10;
-			break;
-		}
-		index++;
-	}
-	if (!n)
-		n = 1;
-	return (((sign * temp) << 10) / n);
-}
-
 ostream &operator<<(ostream &o, const unit &u)
 {
 	return o << u.num;
@@ -253,17 +265,4 @@ istream &operator>>(istream &i, unit &u)
 	return i;
 }
 
-void unit::read(ifstream &f)
-{
-	LINE line;
-	printf("unit: \n");
-	while (!read_word(f, line))
-		;
-	num = convert(line);
-	printf("unit: %s, %d\n", line, (int)num);
-}
-
-void unit::print()
-{
-	printf("          unit: %d\n", (int)num);
-}
+} // namespace unit_ns

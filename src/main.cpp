@@ -1,10 +1,14 @@
 #include <ios>
-#include "element.h"
-#include "polyelem.h"
-#include "polygon.h"
-#include "utils.h"
+#include <string>
+
+#include "common.h"
 #include "attrib.h"
-#include "list.h"
+#include "element.h"
+#include "matrix.h"
+#include "my_vector.h"
+#include "polygon.h"
+#include "treenode.h"
+#include "utils.h"
 
 // #include <graphics.h>
 // #include "graphics.h"
@@ -12,12 +16,18 @@
 // #include <stdlib.h>
 // #include <dos.h>
 
+using attrib_ns::attrib;
+using element_ns::element;
+using matrix_ns::matrix;
+using my_vector_ns::my_vector;
+using polygon_ns::polygon;
 using std::ios;
+using std::string;
+using treenode_ns::treenode;
 
-// extern list<polygon> poly_list;
 extern matrix UNIT_MAT;
-vector view(0, 0, -1000000);
-vector n_light(0, 0, -1024);
+my_vector view(0, 0, -1000000);
+my_vector n_light(0, 0, -1024);
 
 typedef char palette[3];
 enum rgb
@@ -26,6 +36,7 @@ enum rgb
 	G,
 	B
 };
+
 palette pal_16_colors[16];
 palette pal_256_colors[256];
 
@@ -40,9 +51,21 @@ int main()
 	ifstream f;
 	LINE line;
 	polygon *poly;
-	element *root = NULL, *elem1, *elem2;
-	polyelem *pe = new polyelem;
+	element *elem;
+	treenode *root = nullptr;
+	treenode *tn = nullptr;
 	attrib a(1, 1, 1, 0, 0, 0, 1024);
+	bool rc;
+
+	polygon::pol_list *poly_list = new polygon::pol_list;
+	if (!poly_list)
+		error("poly_list allocation error");
+
+	poly_list->clear();
+
+	element::elem_list *elem_list = new element::elem_list;
+	if (!elem_list)
+		error("elem_list allocation error");
 
 	f.open(filename, ios::in);
 	if (!f)
@@ -62,21 +85,51 @@ int main()
 		case 'p':
 			printf("box: p: \n");
 			poly = new polygon;
-			poly->read(f);
-			polygon::poly_list.insert(poly);
+			if (poly) {
+				rc = poly->read(f);
+				if (rc) {
+					poly_list->push_front(*poly);
+				}
+				else {
+					error("read polygon failed");
+				}
+			}
+			else {
+				error("new polygon failed");
+			}
 			break;
 		case 'e':
 			printf("box: e: \n");
-			elem1 = new element;
-			elem1->read(f);
-			if (!root)
-				root = elem1;
+			elem = new element;
+			if (elem) {
+				rc = elem->read(f);
+				if (rc) {
+					elem_list->push_front(*elem);
+				}
+				else {
+					error("read element failed");
+				}
+			}
 			else {
-				elem2 = root->find_elem(elem1->parrent);
-				if (elem2)
-					elem1->addnode(elem2);
-				else
-					error("element not found in tree::addnode()");
+				error("new element failed");
+			}
+			break;
+		case 't':
+			tn = new treenode;
+			if (tn) {
+				rc = tn->read(f);
+				if (rc) {
+					rc = tn->add_treenode(root);
+					if (!rc) {
+						error("element not found in tree::addnode()");
+					}
+				}
+				else {
+					error("read treenode failed");
+				}
+			}
+			else {
+				error("new treenode failed");
 			}
 			break;
 		}
@@ -91,34 +144,55 @@ int main()
 	setviewport(1, 1, 319, 199, 1);
 #endif // 0
 
+	if (!root) {
+		error("root is null");
+	}
+	string *s1 = new string("world");
+	string *s2 = new string("box");
+	treenode *tn1, *tn2;
+
+	if (!s1) {
+		error("string allocation error");
+	}
+
+	if (!s2) {
+		error("string allocation error");
+	}
+
 	printf("find world\n");
-	elem1 = root->find_elem("world");
+	tn1 = root->find_node(root, *s1);
+	if (!tn1) {
+		error("find world error");
+	}
+
 	printf("find box\n");
-	elem2 = root->find_elem("box");
+	tn2 = root->find_node(root, *s2);
+	if (!tn2) {
+		error("find box error");
+	}
+
 	printf("update 1\n");
-	elem2->update(attrib(-32, 0, 0, 0, 0, 0, 2048));
+	tn2->update(attrib(-32, 0, 0, 0, 0, 0, 2048));
+
 	// while (!kbhit()) {
 	printf("update 2\n");
-	elem2->update(attrib(0, 3, 7, 0, 0, 0, 1024));
+	tn2->update(attrib(0, 3, 7, 0, 0, 0, 1024));
+
 	printf("update tree\n");
-	update_tree(root, UNIT_MAT, UNIT_MAT);
+	root->update_tree(root, UNIT_MAT, UNIT_MAT);
 	printf("print tree\n");
-	printall(root);
+	root->printall(root);
 	printf("merge sort\n");
-	pe->merge_sort();
+	polygon::pol_it it;
+	it = poly_list->begin();
+	poly = &*it;
+	poly->merge_sort();
 	// clearviewport();
 	printf("walk list\n");
-	while (pe) {
-		printf("  0\n");
-		polyelem *tmp = pe;
-		printf("  1\n");
-		pe = pe->next;
-		printf("  2\n");
-		printf("  print tmp\n");
-		tmp->print();
-		printf("  3\n");
-		delete tmp;
-		printf("  4\n");
+	for (it = poly_list->begin(); it != poly_list->end(); ++it) {
+		poly = &*it;
+		if (poly)
+			poly->print();
 	}
 	// delay(17);
 	// }

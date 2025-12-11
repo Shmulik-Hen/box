@@ -1,25 +1,36 @@
 #ifndef __MATRIX_H__
 #define __MATRIX_H__
 
+#include "common.h"
 #include "attrib.h"
+#include "my_vector.h"
 #include "unit.h"
-#include "vector.h"
 
-const int mat_dim = 4;
-class matrix
+namespace matrix_ns
 {
-	unit mat[mat_dim][mat_dim];
+
+using attrib_ns::attrib;
+using my_vector_ns::my_vector;
+using unit_ns::unit;
+
+const int dim = 4;
+
+class matrix : public attrib,
+	       public my_vector
+{
+	unit mat[dim][dim];
 
 public:
 
 	matrix();
+	matrix(unit[dim][dim]);
 	~matrix();
-	matrix(unit[mat_dim][mat_dim]);
+	matrix operator*(const matrix &);
 	matrix &operator*=(const matrix &);
-	friend matrix operator*(const matrix &a, const matrix &b);
-	friend void prep_gen_mat(matrix &, const attrib &);
-	friend void prep_rot_mat(matrix &, const attrib &);
-	friend vector operator*(const matrix &, const vector &);
+	my_vector operator*(const my_vector &);
+	void prep_gen_mat(const attrib &);
+	void prep_rot_mat(const attrib &);
 };
 
+} // namespace matrix_ns
 #endif //__MATRIX_H__
