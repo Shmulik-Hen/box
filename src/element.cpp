@@ -1,4 +1,3 @@
-#include <string.h>
 #include <iostream>
 #include <ios>
 #include <stdio.h>
@@ -22,7 +21,7 @@ my_vector n_light(0, 0, -1024);
 
 element::element()
 {
-	polygons = new pol_list;
+	polygons = new poly_list;
 	polygons->clear();
 }
 
@@ -30,6 +29,9 @@ element::~element()
 {
 	if (polygons)
 		delete polygons;
+
+	if (name)
+		delete name;
 }
 
 char make_color(char c1, unit c2)
@@ -52,16 +54,14 @@ element *element::find_elem(elem_list *lst, string &s) const
 	return nullptr;
 }
 
-bool element::read(ifstream &f)
+bool element::read(poly_list *lst, ifstream &f)
 {
 	LINE line;
-	string *s;
 	int finish = 0, len;
-	bool rc = true;
+	bool rc, ret = true;
 
-	while (!f.eof() && !finish && rc) {
+	while (!f.eof() && !finish) {
 		rc = true;
-		printf("element::read\n");
 		while ((!read_word(f, line)) && (!f.eof()))
 			;
 
@@ -70,50 +70,49 @@ bool element::read(ifstream &f)
 
 		switch (line[1]) {
 		case 'n':
-			printf("element::read n:\n");
 			len = read_word(f, line);
 			if (len) {
 				name = new string(line);
-				if (name) {
-					printf("element::read n: %s, %s\n", line, name->c_str());
-				}
-				else {
+				if (!name) {
 					printf("element::read allocation error -  name\n");
+					fflush(stdout);
 					rc = false;
 				}
 			}
 			else {
 				printf("element::read error name\n");
+				fflush(stdout);
 				rc = false;
 			}
 			break;
 		case 'p':
-			printf("element::read p:\n");
 			len = read_word(f, line);
 			if (len) {
-				printf("element::read p: %s\n", line);
-				s = new string(line);
+				string *s = new string(line);
 				if (s) {
-					const polygon *p = find_poly(polygons, *s);
+					const polygon *p = find_poly(lst, *s);
 					if (p) {
 						polygons->push_front(*p);
 					}
 					else {
 						printf("element::read find error -  polygon\n");
+						fflush(stdout);
 						rc = false;
 					}
 				}
 				else {
 					printf("element::read allocation error -  polygon\n");
+					fflush(stdout);
 					rc = false;
 				}
 			}
 			else {
 				printf("element::read error polygon\n");
+				fflush(stdout);
 				rc = false;
 			}
+			break;
 		default:
-			printf("element::read def: \n");
 			finish = 1;
 			f.seekg(-4, ios::cur);
 			break;
@@ -121,15 +120,25 @@ bool element::read(ifstream &f)
 
 		if (!rc) {
 			printf("element::read parsing error\n");
-			return false;
+			fflush(stdout);
+			ret = false;
 		}
 	}
 
-	return true;
+	if (!name) {
+		name = new string("");
+	}
+
+	return ret;
 }
 
 void element::print() const
 {
+	if (name) {
+		printf("    element:\n      name: %s\n", name->c_str());
+		fflush(stdout);
+	}
+
 	for (pol_it it = polygons->begin(); it != polygons->end(); ++it) {
 		const polygon *p = &*it;
 		if (p)

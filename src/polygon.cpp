@@ -1,7 +1,6 @@
 #include <iostream>
 #include <ios>
 #include <iterator>
-#include <string.h>
 #include <stdlib.h>
 #include "polygon.h"
 #include "utils.h"
@@ -32,7 +31,7 @@ polygon::~polygon()
 		delete name;
 }
 
-const polygon *polygon::find_poly(pol_list *lst, const string &s) const
+const polygon *polygon::find_poly(poly_list *lst, const string &s) const
 {
 	if (!lst)
 		return nullptr;
@@ -81,10 +80,10 @@ bool polygon::read(ifstream &f)
 	LINE line;
 	my_vector *v;
 	int finish = 0, len;
-	bool rc = true;
+	bool rc, ret = true;
 
-	while (!f.eof() && !finish && rc) {
-		printf("polygon::read\n");
+	while (!f.eof() && !finish) {
+		rc = true;
 		while ((!read_word(f, line)) && (!f.eof()))
 			;
 
@@ -93,53 +92,47 @@ bool polygon::read(ifstream &f)
 
 		switch (line[1]) {
 		case 'n':
-			printf("polygon::read n:\n");
 			len = read_word(f, line);
 			if (len) {
 				name = new string(line);
-				if (name) {
-					printf("polygon::read n: %s, %s\n", line, name->c_str());
-				}
-				else {
+				if (!name) {
 					printf("polygon::read allocation error -  polygon\n");
+					fflush(stdout);
 					rc = false;
 				}
 			}
 			else {
 				printf("polygon::read error polygon\n");
+				fflush(stdout);
 				rc = false;
 			}
 			break;
 		case 'c':
-			printf("polygon::read c:\n");
 			len = read_word(f, line);
 			if (len) {
 				color = atoi(line);
-				printf("polygon::read c: %s, %d\n", line, color);
 			}
 			else {
 				printf("polygon::read error polygon\n");
+				fflush(stdout);
 				rc = false;
 			}
 			break;
 		case 'f':
-			printf("polygon::read f:\n");
 			len = read_word(f, line);
 			if (len) {
 				force = atoi(line);
-				printf("polygon::read f: %s, %d\n", line, force);
 			}
 			else {
 				printf("polygon::read error polygon\n");
+				fflush(stdout);
 				rc = false;
 			}
 			break;
 		case 'o':
-			printf("polygon::read o:\n");
-			// normal.read(f);
+			normal.read(f);
 			break;
 		case 'v':
-			printf("polygon::read v: \n");
 			v = new my_vector;
 			if (v) {
 				if (v->read(f)) {
@@ -147,16 +140,17 @@ bool polygon::read(ifstream &f)
 				}
 				else {
 					printf("polygon::read error polygon\n");
+					fflush(stdout);
 					rc = false;
 				}
 			}
 			else {
 				printf("element::read allocation error -  polygon\n");
+				fflush(stdout);
 				rc = false;
 			}
 			break;
 		default:
-			printf("polygon::read def:\n");
 			finish = 1;
 			f.seekg(-4, ios::cur);
 			break;
@@ -164,26 +158,39 @@ bool polygon::read(ifstream &f)
 
 		if (!rc) {
 			printf("polygon::read parsing error\n");
-			return false;
+			fflush(stdout);
+			ret = false;
 		}
 	}
 
 	fill = find_fill();
-	normal = find_normal();
-	return true;
+	// normal = find_normal();
+
+	if (!name) {
+		name = new string("");
+	}
+
+	return ret;
 }
 
 void polygon::print() const
 {
 	printf("      polygon:\n");
-	printf("      name: %s\n", name->c_str());
-	printf("      force: %d\n", (int)force);
-	printf("      color: %c\n", color);
-	printf("      fill:\n");
+	fflush(stdout);
+	printf("        name: %s\n", name->c_str());
+	fflush(stdout);
+	printf("        force: %d\n", (int)force);
+	fflush(stdout);
+	printf("        color: %c\n", color);
+	fflush(stdout);
+	printf("        fill:\n");
+	fflush(stdout);
 	fill.print();
-	printf("      normal:\n");
+	printf("        normal:\n");
+	fflush(stdout);
 	normal.print();
-	printf("      points:\n");
+	printf("        points:\n");
+	fflush(stdout);
 	for (vec_it it = points->cbegin(); it != points->cend(); ++it) {
 		const my_vector *v = &*it;
 		if (v)
@@ -213,8 +220,10 @@ my_vector polygon::find_normal()
 	vec_it it = points->begin();
 	my_vector v1, v2, v;
 
-	v1 = *it;
-	v2 = *++it;
+	if (points->size() >= 2) {
+		v1 = *it;
+		v2 = *++it;
+	}
 
 	v.get_coord(coord::X) = (v1.get_coord(coord::Y) * v2.get_coord(coord::Z) - v1.get_coord(coord::Z) * v2.get_coord(coord::Y));
 	v.get_coord(coord::Y) = (v1.get_coord(coord::Z) * v2.get_coord(coord::X) - v1.get_coord(coord::X) * v2.get_coord(coord::Z));

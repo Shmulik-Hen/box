@@ -25,12 +25,12 @@ class polygon : public my_vector
 
 public:
 
-	typedef list<polygon> pol_list;
-	typedef pol_list::iterator pol_it;
+	typedef list<polygon> poly_list;
+	typedef poly_list::iterator pol_it;
 
 	polygon();
 	~polygon();
-	const polygon *find_poly(pol_list *, const string &) const;
+	const polygon *find_poly(poly_list *, const string &) const;
 	polygon *merge_sort();
 	polygon *pop();
 	void push();

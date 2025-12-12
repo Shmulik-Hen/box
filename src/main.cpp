@@ -47,68 +47,82 @@ int main()
 	char filename[] = "box.dat";
 	ifstream f;
 	LINE line;
-	polygon *poly;
-	element *elem;
-	treenode *root = nullptr;
-	treenode *tn = nullptr;
+	polygon *poly{nullptr};
+	element *elem{nullptr};
+	treenode *root{nullptr};
+	treenode *tn{nullptr};
 	attrib a(1, 1, 1, 0, 0, 0, 1024);
 	matrix UNIT_MAT = get_unit_mat();
 	bool rc;
+	int ret = 0;
 
-	polygon::pol_list *poly_list = new polygon::pol_list;
-	if (!poly_list)
+	polygon::poly_list *poly_lst = new polygon::poly_list;
+	if (!poly_lst) {
+		ret = 1;
 		error("poly_list allocation error");
+	}
 
-	poly_list->clear();
+	poly_lst->clear();
 
 	element::elem_list *elem_lst = new element::elem_list;
-	if (!elem_lst)
+	if (!elem_lst) {
+		ret = 1;
 		error("elem_lst allocation error");
+	}
+
+	elem_lst->clear();
 
 	f.open(filename, ios::in);
-	if (!f)
+	if (!f) {
+		ret = 1;
 		error("file not found:", filename);
+	}
 
 	f.unsetf(ios::skipws);
 
-	printf("start parsing\n");
 	while (!f.eof()) {
-		printf("box: \n");
+		rc = true;
 		while ((!read_word(f, line)) && (!f.eof()))
 			;
+
+		if (f.eof()) {
+			break;
+		}
+
 		switch (line[1]) {
 		case '#':
-			printf("box: #: \n");
 			read_remark(f);
 		case 'p':
-			printf("box: p: \n");
 			poly = new polygon;
 			if (poly) {
 				rc = poly->read(f);
 				if (rc) {
-					poly_list->push_front(*poly);
+					poly_lst->push_front(*poly);
 				}
 				else {
+					ret = 1;
 					error("read polygon failed");
 				}
 			}
 			else {
+				ret = 1;
 				error("new polygon failed");
 			}
 			break;
 		case 'e':
-			printf("box: e: \n");
 			elem = new element;
 			if (elem) {
-				rc = elem->read(f);
+				rc = elem->read(poly_lst, f);
 				if (rc) {
 					elem_lst->push_front(*elem);
 				}
 				else {
+					ret = 1;
 					error("read element failed");
 				}
 			}
 			else {
+				ret = 1;
 				error("new element failed");
 			}
 			break;
@@ -117,20 +131,31 @@ int main()
 			if (tn) {
 				rc = tn->read(elem_lst, f);
 				if (rc) {
-					tn->add_treenode(root);
+					tn->add_treenode(&root);
 				}
 				else {
+					ret = 1;
 					error("read treenode failed");
 				}
 			}
 			else {
+				ret = 1;
 				error("new treenode failed");
 			}
 			break;
 		}
+
+		if (!rc) {
+			ret = 1;
+			error("parsing error");
+		}
+
+		if (ret) {
+			return ret;
+		}
 	}
+
 	f.close();
-	printf("parsing complete\n");
 #if 0
 	int Gd = DETECT, Gm;
 	installuserdriver("SVGA256", DetectVGA256);
@@ -142,6 +167,7 @@ int main()
 	if (!root) {
 		error("root is null");
 	}
+
 	string *s1 = new string("world");
 	string *s2 = new string("box");
 	treenode *tn1, *tn2;
@@ -154,46 +180,43 @@ int main()
 		error("string allocation error");
 	}
 
-	printf("find world\n");
 	tn1 = root->find_node(root, *s1);
 	if (!tn1) {
 		error("find world error");
 	}
 
-	printf("find box\n");
 	tn2 = root->find_node(root, *s2);
 	if (!tn2) {
 		error("find box error");
 	}
 
-	printf("update 1\n");
 	tn2->update(attrib(-32, 0, 0, 0, 0, 0, 2048));
 
 	// while (!kbhit()) {
-	printf("update 2\n");
-	tn2->update(attrib(0, 3, 7, 0, 0, 0, 1024));
-
-	printf("update tree\n");
-	root->update_tree(root, UNIT_MAT, UNIT_MAT);
-	printf("print tree\n");
-	root->printall(root);
-	printf("merge sort\n");
-	polygon::pol_it it;
-	it = poly_list->begin();
-	poly = &*it;
-	poly->merge_sort();
-	// clearviewport();
-	printf("walk list\n");
-	for (it = poly_list->begin(); it != poly_list->end(); ++it) {
+	int i = 3;
+	while (i--) {
+		tn2->update(attrib(0, 3, 7, 0, 0, 0, 1024));
+		root->update_tree(root, UNIT_MAT, UNIT_MAT);
+		printf("print tree\n");
+		fflush(stdout);
+		root->printall(root);
+		printf("merge sort\n");
+		fflush(stdout);
+		polygon::pol_it it = poly_lst->begin();
 		poly = &*it;
-		if (poly)
-			poly->print();
+		poly->merge_sort();
+		// clearviewport();
+		printf("walk list\n");
+		fflush(stdout);
+		for (it = poly_lst->begin(); it != poly_lst->end(); ++it) {
+			poly = &*it;
+			if (poly)
+				poly->print();
+		}
+		// delay(17);
 	}
-	// delay(17);
-	// }
 	// closegraph();
-	printf("done\n");
-	return 0;
+	return ret;
 }
 
 #if 0

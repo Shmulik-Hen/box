@@ -1,10 +1,11 @@
+#if 0
 #include <stdlib.h>
 #include "tree.h"
 
 namespace tree_ns
 {
 
-void tree::addnode(tree *parrent)
+tree *tree::addnode(tree *parrent)
 {
 	if (!parrent)
 		parrent = this;
@@ -12,6 +13,8 @@ void tree::addnode(tree *parrent)
 		this->sibling = parrent->child;
 		parrent->child = this;
 	}
+
+	return this;
 }
 
 tree *tree::search(tree *root, int (*comp)(const void *)) const
@@ -32,3 +35,4 @@ tree *tree::search(tree *root, int (*comp)(const void *)) const
 }
 
 } // namespace tree_ns
+#endif // 0

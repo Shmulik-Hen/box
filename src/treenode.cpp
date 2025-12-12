@@ -1,38 +1,35 @@
-#include <fstream>
-#include <iostream>
 #include <ios>
-
 #include "treenode.h"
 #include "utils.h"
 
 namespace treenode_ns
 {
 
-using std::ifstream;
 using std::ios;
 
-void treenode::update_tree(treenode *node, matrix &p_gen, matrix &p_rot)
+treenode::~treenode()
 {
-	if (node) {
-		elem->update(att, p_gen, p_rot);
-		if (node->active_flag) {
-			if (node->child)
-				update_tree((treenode *)node->child, node->elem->get_gen_matrix(), node->elem->get_rot_matrix());
-		}
-		if (node->sibling)
-			update_tree((treenode *)node->sibling, p_gen, p_rot);
-	}
-}
+	if (name)
+		delete name;
+
+	if (parrent_name)
+		delete parrent_name;
+
+	if (elem_name)
+		delete elem_name;
+
+	if (elem)
+		delete elem;
+};
 
 bool treenode::read(elem_list *lst, ifstream &f)
 {
 	LINE line;
 	int finish = 0, len;
-	bool rc = true;
+	bool rc, ret = true;
 
-	while (!f.eof() && !finish && rc) {
+	while (!f.eof() && !finish) {
 		rc = true;
-		printf("treenode::read\n");
 		while ((!read_word(f, line)) && (!f.eof()))
 			;
 
@@ -41,74 +38,67 @@ bool treenode::read(elem_list *lst, ifstream &f)
 
 		switch (line[1]) {
 		case 'n':
-			printf("treenode::read n:\n");
 			len = read_word(f, line);
 			if (len) {
 				name = new string(line);
-				if (name) {
-					printf("treenode::read n: %s, %s\n", line, name->c_str());
-				}
-				else {
+				if (!name) {
 					printf("treenode::read allocation error -  name\n");
+					fflush(stdout);
 					rc = false;
 				}
 			}
 			else {
 				printf("treenode::read error name\n");
+				fflush(stdout);
 				rc = false;
 			}
 			break;
 		case 'p':
-			printf("treenode::read p:\n");
 			len = read_word(f, line);
 			if (len) {
 				parrent_name = new string(line);
-				if (parrent_name) {
-					printf("treenode::read f: %s, %s\n", line, parrent_name->c_str());
-				}
-				else {
+				if (!parrent_name) {
 					printf("treenode::read allocation error -  parrent_name\n");
+					fflush(stdout);
 					rc = false;
 				}
 			}
 			break;
 		case 'e':
-			printf("treenode::read e:\n");
 			len = read_word(f, line);
 			if (len) {
 				elem_name = new string(line);
 				if (elem_name) {
-					printf("treenode::read f: %s, %s\n", line, elem_name->c_str());
 					elem = find_elem(lst, *elem_name);
 				}
 				else {
 					printf("treenode::read allocation error -  element name\n");
+					fflush(stdout);
 					rc = false;
 				}
 			}
 			break;
-		case 't':
-			printf("treenode::read t:\n");
+		case 'f':
 			len = read_word(f, line);
 			if (len) {
 				active_flag = atoi(line);
 				dirty_flag = 0;
-				printf("treenode::read t: %s, %d\n", line, active_flag);
 			}
 			else {
 				printf("treenode::read error flag\n");
+				fflush(stdout);
 				rc = false;
 			}
 			break;
 		case 'a':
-			printf("treenode::read a:\n");
 			rc = att.read(f);
 			if (!rc) {
 				printf("treenode::read error attrib\n");
+				fflush(stdout);
+				rc = false;
 			}
 			break;
 		default:
-			printf("treenode::read def: \n");
 			finish = 1;
 			f.seekg(-4, ios::cur);
 			break;
@@ -116,20 +106,42 @@ bool treenode::read(elem_list *lst, ifstream &f)
 
 		if (!rc) {
 			printf("treenode::read parsing error\n");
-			return false;
+			fflush(stdout);
+			ret = false;
 		}
 	}
 
-	return true;
+	if (!name) {
+		name = new string("");
+	}
+
+	if (!parrent_name) {
+		parrent_name = new string("");
+	}
+
+	if (!elem_name) {
+		elem_name = new string("");
+	}
+
+	if (!elem) {
+		elem = new element;
+	}
+
+	return ret;
 }
 
 void treenode::print() const
 {
-	printf("    treenode:\n");
+	printf("  treenode:\n");
+	fflush(stdout);
 	printf("    name: %s\n", name->c_str());
-	printf("    parrent_name %s\n", parrent_name->c_str());
+	fflush(stdout);
+	printf("    parrent_name: %s\n", parrent_name->c_str());
+	fflush(stdout);
 	printf("    active_flag: %d\n", active_flag);
+	fflush(stdout);
 	printf("    dirty_flag: %d\n", dirty_flag);
+	fflush(stdout);
 	att.print();
 	if (elem)
 		elem->print();
@@ -144,9 +156,9 @@ void treenode::printall(treenode *root) const
 	}
 }
 
-void drawpoly(int i, int *arr)
-{
-}
+// void drawpoly(int i, int *arr)
+// {
+// }
 
 void treenode::show() const
 {
@@ -172,25 +184,52 @@ void treenode::update(const attrib &a)
 	att += a;
 }
 
-string cmp_name;
-
-int treenode_comp(const void *p)
+void treenode::update_tree(treenode *node, matrix &p_gen, matrix &p_rot)
 {
-	treenode *tn = (treenode *)p;
-	return (cmp_name == *tn->name);
+	if (node) {
+		elem->update(att, p_gen, p_rot);
+		if (node->active_flag) {
+			if (node->child) {
+				update_tree(node->child, node->elem->get_gen_matrix(), node->elem->get_rot_matrix());
+			}
+		}
+		if (node->sibling) {
+			update_tree(node->sibling, p_gen, p_rot);
+		}
+	}
 }
 
-void treenode::add_treenode(treenode *parrent)
+void treenode::add_treenode(treenode **parrent)
 {
-	cmp_name = parrent->parrent_name->c_str();
-	treenode *p = (treenode *)search(parrent, treenode_comp);
-	addnode(p);
+	if (!*parrent) {
+		*parrent = this;
+	}
+	else {
+		this->sibling = (*parrent)->child;
+		(*parrent)->child = this;
+	}
 }
 
 treenode *treenode::find_node(treenode *root, string &s) const
 {
-	cmp_name = s;
-	treenode *p = (treenode *)search(root, treenode_comp);
+	treenode *p{nullptr};
+
+	if (!root) {
+		return nullptr;
+	}
+
+	if (*root->name == s) {
+		p = root;
+	}
+
+	if (!p) {
+		p = find_node(root->child, s);
+	}
+
+	if (!p) {
+		p = find_node(root->sibling, s);
+	}
+
 	return p;
 }
 

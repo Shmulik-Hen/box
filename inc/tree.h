@@ -1,3 +1,4 @@
+#if 0
 #ifndef __TREE_H__
 #define __TREE_H__
 
@@ -17,9 +18,10 @@ public:
 
 	tree() {};
 	~tree() {};
-	void addnode(tree *parrent);
+	tree *addnode(tree *parrent);
 	tree *search(tree *, int (*comp)(const void *)) const;
 };
 
 } // namespace tree_ns
 #endif //__TREE_H__
+#endif // 0

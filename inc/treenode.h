@@ -6,7 +6,7 @@
 
 #include "attrib.h"
 #include "element.h"
-#include "tree.h"
+// #include "tree.h"
 
 namespace treenode_ns
 {
@@ -15,28 +15,28 @@ using attrib_ns::attrib;
 using element_ns::element;
 using std::ifstream;
 using std::string;
-using tree_ns::tree;
+// using tree_ns::tree;
 
-class treenode : public tree,
-		 public element
+class treenode : public element
 {
 
 public:
 
-	typedef int (*comp)(const void *);
-
 	treenode() {};
-	~treenode() {};
-	void update_tree(treenode *, matrix &, matrix &);
+	~treenode();
 	bool read(elem_list *, ifstream &);
 	void print() const;
 	void printall(treenode *) const;
 	void show() const;
-	void add_treenode(treenode *);
 	void update(const attrib &);
+	void update_tree(treenode *, matrix &, matrix &);
+	void add_treenode(treenode **);
 	treenode *find_node(treenode *, string &) const;
 
 private:
+
+	treenode *sibling{nullptr};
+	treenode *child{nullptr};
 
 	string *name{nullptr};
 	string *parrent_name{nullptr};
@@ -45,8 +45,6 @@ private:
 	attrib att;
 	int active_flag{0};
 	int dirty_flag{0};
-
-	friend int treenode_comp(const void *);
 };
 
 } // namespace treenode_ns

@@ -91,6 +91,11 @@ long SIN[]={
 
 long *COS = &SIN[128]; /* cos(x) = sin(x+"90")	*/
 
+unit::unit()
+{
+	num = 0;
+}
+
 unit::unit(const long &n)
 {
 	num = n;
@@ -113,7 +118,7 @@ unit unit::operator*(const unit &u) const
 
 unit unit::operator/(const unit &u) const
 {
-	return unit((num << 10) / u.num);
+	return unit((num << 10) / (u.num ? u.num : 1));
 }
 
 unit unit::operator-() const
@@ -141,7 +146,7 @@ unit &unit::operator*=(const unit &u)
 
 unit &unit::operator/=(const unit &u)
 {
-	num = (num << 10) / u.num;
+	num = (num << 10) / (u.num ? u.num : 1);
 	return *this;
 }
 
@@ -158,17 +163,16 @@ unit::operator long()
 bool unit::read(ifstream &f)
 {
 	LINE line;
-	printf("unit::read \n");
 	while (!read_word(f, line))
 		;
 	num = convert(line);
-	printf("unit::read %s, %d\n", line, (int)num);
 	return true;
 }
 
 void unit::print() const
 {
-	printf("          unit: %d\n", (int)num);
+	printf("            unit: %ld\n", num);
+	fflush(stdout);
 }
 
 long unit::convert(const char *s)

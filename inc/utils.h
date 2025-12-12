@@ -2,6 +2,7 @@
 #define __UTILS_H__
 
 #include <fstream>
+#include <string.h>
 #include "common.h"
 
 using std::ifstream;

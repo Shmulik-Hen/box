@@ -17,7 +17,7 @@ class unit
 
 public:
 
-	unit() {};
+	unit();
 	unit(const long &);
 	~unit() {};
 	unit operator+(const unit &) const;

@@ -16,11 +16,11 @@ void error(const char *s1, const char *s2)
 
 int read_word(ifstream &f, char *word)
 {
-	word[0] = '\0';
 	int finish = 0;
 	int length = 0;
 	char c;
 
+	bzero(word, MAX_LINE);
 	while ((!finish) && (!f.eof()) && (length < MAX_LINE)) {
 		f >> c;
 		// printf("read_word: %c\n", c);
@@ -30,7 +30,7 @@ int read_word(ifstream &f, char *word)
 			word[length++] = c;
 	}
 	word[length] = '\0';
-	printf("read_word: %s, %d\n", word, length);
+	// printf("read_word: %s, %d\n", word, length);
 	return length;
 }
 

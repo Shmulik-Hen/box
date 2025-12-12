@@ -62,12 +62,11 @@
  #p bottom
 #t
  #n world
- #p
- #t 1
+ #f 1
  #a (0,0,0,0,0,0,1)
 #t
  #n box
  #p world
  #e box
- #t 1
+ #f 1
  #a (0,0,0,0,0,0,1)

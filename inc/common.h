@@ -2,7 +2,7 @@
 #define __COMMON_H__
 
 #define MAX_NAME 10
-#define MAX_LINE 80
+#define MAX_LINE 20
 // #define max(x, y) (((x) > (y)) ? (x) : (y))
 // #define min(x, y) (((x) < (y)) ? (x) : (y))
 

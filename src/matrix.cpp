@@ -80,7 +80,7 @@ my_vector matrix::operator*(const my_vector &v)
 
 void matrix::prep_gen_mat(const attrib &a)
 {
-	mat[0][0] = a.get_zoom() * cos(a.get_deg_y()) * cos(a.get_deg_z());
+	mat[0][0] = unit(a.get_zoom() * cos(a.get_deg_y()) * cos(a.get_deg_z()));
 	mat[0][1] = a.get_zoom() * -cos(a.get_deg_y()) * sin(a.get_deg_z());
 	mat[0][2] = a.get_zoom() * -sin(a.get_deg_y());
 	mat[0][3] = a.get_off_x();

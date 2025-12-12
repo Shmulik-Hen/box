@@ -90,10 +90,8 @@ void my_vector::normalize(my_vector &v)
 
 bool my_vector::read(ifstream &f)
 {
-	printf("my_vector::read \n");
 	for (coord c = coord::__first_coord; c < coord::__last_coord; c++) {
 		if (!_coords->at(c).read(f)) {
-			printf("vector::read error\n");
 			return false;
 		}
 	}
@@ -103,7 +101,8 @@ bool my_vector::read(ifstream &f)
 
 void my_vector::print() const
 {
-	printf("        vector:\n");
+	printf("          vector:\n");
+	fflush(stdout);
 	for (coord c = coord::__first_coord; c < coord::__last_coord; ++c)
 		_coords->at(c).print();
 }

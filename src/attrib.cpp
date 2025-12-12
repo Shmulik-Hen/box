@@ -37,7 +37,6 @@ attrib &attrib::operator+=(const attrib &a)
 bool attrib::read(ifstream &f)
 {
 	bool rc = false;
-	printf("attrib::read \n");
 	rc += deg_x.read(f);
 	rc += deg_y.read(f);
 	rc += deg_z.read(f);
@@ -47,13 +46,15 @@ bool attrib::read(ifstream &f)
 	rc += zoom.read(f);
 	if (!rc) {
 		printf("attrib::read error\n");
+		fflush(stdout);
 	}
 	return rc;
 }
 
 void attrib::print() const
 {
-	printf("attrib:\n");
+	printf("    attrib:\n");
+	fflush(stdout);
 	deg_x.print();
 	deg_y.print();
 	deg_z.print();
