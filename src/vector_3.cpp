@@ -113,28 +113,26 @@ vector_3 vector_3::project(const vector_3& t, const vector_3& v)
 	return temp;
 }
 
-vector_3 vector_3::project(const vector_3& world_point, const vector_3& cam_pos, unit focal_len, unit near_eps)
+vector_3 vector_3::project(const vector_3& world_point, const vector_3& cam_pos, unit focal_len, unit near_eps, int forward_sign)
 {
-	// camera -> point
 	unit dx = world_point.get(X_) - cam_pos.get(X_);
 	unit dy = world_point.get(Y_) - cam_pos.get(Y_);
 	unit dz = world_point.get(Z_) - cam_pos.get(Z_);
 
-	// We assume camera looks toward +Z in world space.
-	// Projection plane is at camera space z = focal_len.
-	// Screen x = dx * focal_len / dz, y = dy * focal_len / dz
 	if (near_eps == ZERO) {
 		near_eps = UNIT;
 	}
 
-	if (std::abs(dz) < near_eps) {
-		dz = (dz >= 0) ? near_eps : -near_eps;
+	unit depth = (unit)forward_sign * dz; // >0 is in front
+
+	if (depth < near_eps) {
+		depth = near_eps;
 	}
 
 	vector_3 out;
-	out.set(X_, dx * focal_len / dz);
-	out.set(Y_, dy * focal_len / dz);
-	out.set(Z_, dz); // keep depth if required; otherwise 0
+	out.set(X_, dx * focal_len / depth);
+	out.set(Y_, dy * focal_len / depth);
+	out.set(Z_, depth);
 
 	return out;
 }

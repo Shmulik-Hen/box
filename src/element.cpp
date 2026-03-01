@@ -11,8 +11,6 @@ using namespace polygon_ns;
 using polygon = polygon_ns::polygon;
 using polylist_t = polygon_ns::polygon::polylist_t;
 
-bool element_ns::element::_mats_prepared = false;
-
 void element::init_from_def(const polylist_t& poly_list, element* root, const config_ns::element_def& def)
 {
 	_name = def.name;
@@ -183,28 +181,20 @@ void element::update()
 	}
 }
 
-void element::update(const matrix& p_trans, const matrix& p_rot, frame_context& frame_ctx)
+void element::update(const matrix& p_trans, const matrix& p_rot, const bool p_dirty, frame_context& frame_ctx)
 {
 	if (!_active) {
 		return;
 	}
 
-	if (!_parent) {
-		// only once for root
-		if (!_mats_prepared) {
-			_trans_mat.prep_trans_mat(_ini_att);
-			_rot_mat.prep_rot_mat(_ini_att);
-			_mats_prepared = true;
-		}
-	}
-	else {
-		_trans_mat.prep_trans_mat(_ini_att);
-		_rot_mat.prep_rot_mat(_ini_att);
-	}
+	_trans_mat.prep_trans_mat(_ini_att);
+	_rot_mat.prep_rot_mat(_ini_att);
 
-	if (_dirty) {
-		_trans_mat *= p_trans;
-		_rot_mat *= p_rot;
+	_world_dirty = _dirty || p_dirty;
+
+	if (_world_dirty) {
+		_trans_mat = p_trans * _trans_mat;
+		_rot_mat = p_rot * _rot_mat;
 
 		if (_polygons.size()) {
 			for (auto poly : _polygons) {
@@ -221,17 +211,25 @@ void element::update(const matrix& p_trans, const matrix& p_rot, frame_context& 
 void element::update(frame_context& frame_ctx)
 {
 	matrix m_trans, m_rot;
+	bool parent_dirty;
 
 	if (_parent) {
 		m_trans = _parent->_trans_mat;
 		m_rot = _parent->_rot_mat;
+		parent_dirty = _parent->_world_dirty;
 	}
 	else {
 		m_trans = matrix_ns::get_unit_mat();
 		m_rot = matrix_ns::get_unit_mat();
+		parent_dirty = false;
 	}
 
-	update(m_trans, m_rot, frame_ctx);
+	DBG("element::update: " << _name << "parent: " << _parent_name);
+	DBG("transform:");
+	m_trans.print();
+	DBG("rotate:");
+	m_rot.print();
+	update(m_trans, m_rot, parent_dirty, frame_ctx);
 }
 
 static void upd(element_ns::element* e, void* data)

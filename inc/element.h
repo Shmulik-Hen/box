@@ -39,12 +39,14 @@ public:
 
 	void update(const attrib_ns::attrib&);
 	void update();
-	void update(const matrix_ns::matrix&, const matrix_ns::matrix&, frame_context&);
+	void update(const matrix_ns::matrix&, const matrix_ns::matrix&, const bool, frame_context&);
 	void update(frame_context&);
 	void update_all(frame_context&);
 
 	const std::string get_name() const { return _name; }
 	bool has_run_attrib() const { return _run_att.has_value(); }
+
+	bool _world_dirty {false};
 
 private:
 
@@ -57,7 +59,6 @@ private:
 	attrib_ns::attrib _ini_att;
 	bool _active {false};
 	bool _dirty {false};
-	static bool _mats_prepared;
 	std::optional<attrib_ns::attrib> _run_att;
 
 	polygon_ns::polygon* find(const polygon_ns::polygon::polylist_t&, const std::string&) const;

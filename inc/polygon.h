@@ -106,7 +106,7 @@ class polygon
 		void rect(scene_ns::frame_context&, point&, point&, bool fill = true);
 
 		void clear_scratch_pad();
-		void transform(scene_ns::frame_context&, const vector_3_ns::vector_3&, vector_3_ns::vector_3&, bool);
+		void transform(scene_ns::frame_context&, const vector_3_ns::vector_3&, vector_3_ns::vector_3&, const int, const bool);
 		void project(scene_ns::frame_context&, const vector_3_ns::vector_3&, point&);
 		void make_color(unit);
 

@@ -195,7 +195,7 @@ void my_scene::sort()
 	// clang-format off
 	std::sort(frame_ctx.draw_vec->begin(), frame_ctx.draw_vec->end(),
 		  [](polygon* a, polygon* b) {
-			return a->get_depth() < b->get_depth();
+			return a->get_depth() > b->get_depth();
 		  });
 	// clang-format on
 }
@@ -259,8 +259,8 @@ void my_scene::set_defaults()
 
 	// light
 	frame_ctx.state->light.type = light_type::directional;
-	frame_ctx.state->light.direction = {ZERO, ZERO, -UNIT};
-	frame_ctx.state->light.position = {ZERO, LIGHT_ELEV, LIGHT_DIST};
+	frame_ctx.state->light.direction = {LIGHT_DIR_X, LIGHT_DIR_Y, LIGHT_DIR_Z};
+	frame_ctx.state->light.position = {LIGHT_POS_X, LIGHT_POS_Y, LIGHT_POS_Z};
 	DBG("light type: " << (int)frame_ctx.state->light.type);
 	DBG("light direction:");
 	frame_ctx.state->light.direction.print();
@@ -268,13 +268,13 @@ void my_scene::set_defaults()
 	frame_ctx.state->light.position.print();
 
 	// camera
-	frame_ctx.state->camera.position = {ZERO, ZERO, -ZLIMIT};
+	frame_ctx.state->camera.position = {CAM_POS_X, CAM_POS_Y, CAM_POS_Z};
 	DBG("camera position:");
 	frame_ctx.state->camera.position.print();
 
 	// projection
-	frame_ctx.state->proj.focal_len = ZLIMIT * 1.5f;
-	frame_ctx.state->proj.near_eps = UNIT;
+	frame_ctx.state->proj.focal_len = FOCAL_LEN;
+	frame_ctx.state->proj.near_eps = NEAR_EPS;
 	DBG("projection: focal len: " << FLT(frame_ctx.state->proj.focal_len, 3) << ", near_eps: " << FLT(frame_ctx.state->proj.near_eps, 3));
 
 	// screen
@@ -287,8 +287,8 @@ void my_scene::set_defaults()
 	DBG("max_pos: {" << DEC(frame_ctx.state->vp.max_pos.x, 4) << SEP << DEC(frame_ctx.state->vp.max_pos.y, 4) << "}");
 	DBG("mid_pos: {" << DEC(frame_ctx.state->vp.mid_pos.x, 4) << SEP << DEC(frame_ctx.state->vp.mid_pos.y, 4) << "}");
 
-	frame_ctx.state->run.loops = -1;
-	frame_ctx.state->run.loop_delay = 20;
+	frame_ctx.state->run.loops = DEF_LOOP_NUM;
+	frame_ctx.state->run.loop_delay = DEF_LOOP_DELAY;
 }
 
 } // namespace scene_ns

@@ -30,7 +30,7 @@ public:
 	static unit dot(const vector_3&, const vector_3&);
 	static vector_3 cross(const vector_3&, const vector_3&);
 	static vector_3 project(const vector_3&, const vector_3&);
-	static vector_3 project(const vector_3&, const vector_3&, unit, unit near_eps = UNIT); // pinhole projection
+	static vector_3 project(const vector_3&, const vector_3&, unit, unit, int); // pinhole projection
 	static vector_3 normalize(const vector_3&);
 
 	vector_3 operator+(const vector_3&) const;

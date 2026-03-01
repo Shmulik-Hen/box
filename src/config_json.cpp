@@ -508,27 +508,29 @@ bool parse_json_environment(AST& ast, const Json::Value& object, const unsigned 
 
 	DBG("parse_env: environment:");
 	if (object.isMember("color_idx")) {
-		DBG("parse_env: color_idx:");
+		DBG("parse_env: found color_idx");
 		if (!object["color_idx"].isNumeric()) {
 			ERR("parse_env: object[" << idx << "] color_idx is not numeric");
 			return false;
 		}
 		val = object["color_idx"];
 		ast.env.color_idx = val.asInt();
+		DBG("parse_env: color_idx: " << val.asInt());
 	}
 
 	if (object.isMember("light_type")) {
-		DBG("parse_env: light_type:");
+		DBG("parse_env: found light_type");
 		if (!object["light_type"].isNumeric()) {
 			ERR("parse_env: object[" << idx << "] light_type is not numeric");
 			return false;
 		}
 		val = object["light_type"];
 		ast.env.light_type = val.asInt();
+		DBG("parse_env: light_type: " << val.asInt());
 	}
 
 	if (object.isMember("light_direction")) {
-		DBG("parse_env: light_direction:");
+		DBG("parse_env: found light_direction");
 		val = object["light_direction"];
 		rc = parse_json_vector(coords, val, idx);
 		if (!rc) {
@@ -537,10 +539,11 @@ bool parse_json_environment(AST& ast, const Json::Value& object, const unsigned 
 
 		vector_3 v(coords);
 		ast.env.light_direction = v;
+		v.print();
 	}
 
 	if (object.isMember("light_position")) {
-		DBG("parse_env: light_position:");
+		DBG("parse_env: found light_position");
 		val = object["light_position"];
 		rc = parse_json_vector(coords, val, idx);
 		if (!rc) {
@@ -549,10 +552,11 @@ bool parse_json_environment(AST& ast, const Json::Value& object, const unsigned 
 
 		vector_3 v(coords);
 		ast.env.light_position = v;
+		v.print();
 	}
 
 	if (object.isMember("camera_position")) {
-		DBG("parse_env: camera_position:");
+		DBG("parse_env: found camera_position");
 		val = object["camera_position"];
 		rc = parse_json_vector(coords, val, idx);
 		if (!rc) {
@@ -561,25 +565,51 @@ bool parse_json_environment(AST& ast, const Json::Value& object, const unsigned 
 
 		vector_3 v(coords);
 		ast.env.camera_position = v;
+		v.print();
 	}
 
 	if (object.isMember("focal_len")) {
-		DBG("parse_env: focal_len:");
+		DBG("parse_env: found focal_len");
 		if (!object["focal_len"].isNumeric()) {
 			ERR("parse_env: object[" << idx << "] focal_len is not numeric");
 			return false;
 		}
 		val = object["focal_len"];
 		ast.env.focal_len = val.asFloat();
+		DBG("parse_env: focal_len: " << val.asFloat());
 	}
 
 	if (object.isMember("near_eps")) {
-		val = object["near_eps"];
+		DBG("parse_env: found near_eps");
 		if (!object["near_eps"].isNumeric()) {
 			ERR("parse_env: object[" << idx << "] near_eps is not numeric");
 			return false;
 		}
+		val = object["near_eps"];
 		ast.env.near_eps = val.asFloat();
+		DBG("parse_env: focal_len: " << val.asFloat());
+	}
+
+	if (object.isMember("loops")) {
+		DBG("parse_env: found loops");
+		if (!object["loops"].isNumeric()) {
+			ERR("parse_env: object[" << idx << "] loops is not numeric");
+			return false;
+		}
+		val = object["loops"];
+		ast.run.loops = val.asInt();
+		DBG("parse_env: loops: " << val.asInt());
+	}
+
+	if (object.isMember("loop_delay")) {
+		DBG("parse_env: loop_delay:");
+		if (!object["loop_delay"].isNumeric()) {
+			ERR("parse_env: object[" << idx << "] loop_delay is not numeric");
+			return false;
+		}
+		val = object["loop_delay"];
+		ast.run.loop_delay = val.asInt();
+		DBG("parse_env: loop_delay: " << val.asInt());
 	}
 
 	if (object.isMember("min_pos")) {
@@ -602,26 +632,6 @@ bool parse_json_environment(AST& ast, const Json::Value& object, const unsigned 
 		}
 
 		ast.env.max_pos = config_ns::point_def {points[0], points[1]};
-	}
-
-	if (object.isMember("loops")) {
-		DBG("parse_env: loops:");
-		if (!object["loops"].isNumeric()) {
-			ERR("parse_env: object[" << idx << "] loops is not numeric");
-			return false;
-		}
-		val = object["loops"];
-		ast.run.loops = val.asInt();
-	}
-
-	if (object.isMember("loop_delay")) {
-		DBG("parse_env: loop_delay:");
-		if (!object["loop_delay"].isNumeric()) {
-			ERR("parse_env: object[" << idx << "] loop_delay is not numeric");
-			return false;
-		}
-		val = object["loop_delay"];
-		ast.run.loop_delay = val.asInt();
 	}
 
 	return true;

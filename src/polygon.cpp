@@ -243,7 +243,6 @@ void polygon::drawing::rect(frame_context& frame_ctx, point& tl, point& br, bool
 			}
 		}
 		else {
-			// clang-format off
 			point tr_ {br_.x, tl_.y};
 			point bl_ {tl_.x, br_.y};
 			moveto(frame_ctx, tl_);
@@ -251,7 +250,6 @@ void polygon::drawing::rect(frame_context& frame_ctx, point& tl, point& br, bool
 			stroke_to(frame_ctx, br_);
 			stroke_to(frame_ctx, bl_);
 			stroke_to(frame_ctx, tl_);
-			// clang-format on
 		}
 	}
 }
@@ -570,11 +568,14 @@ void polygon::drawing::clear_scratch_pad()
 	_scratch_pad.clear();
 }
 
-void polygon::drawing::transform(frame_context& frame_ctx, const vector_3& original, vector_3& transformed, bool force)
+void polygon::drawing::transform(frame_context& frame_ctx, const vector_3& original, vector_3& transformed, const int forward_sign, const bool force)
 {
 	transformed = _trans_mat * original;
 
-	if (!force && (transformed.get(Z_) < frame_ctx.state->camera.position.get(Z_))) {
+	unit dz = transformed.get(Z_) - frame_ctx.state->camera.position.get(Z_);
+	unit depth = (unit)forward_sign * dz;
+
+	if (!force && (depth < frame_ctx.state->proj.near_eps)) {
 		_invalid = true;
 	}
 }
@@ -584,7 +585,8 @@ void polygon::drawing::project(frame_context& frame_ctx, const vector_3& transfo
 	vector_3 projected = vector_3::project(transformed,
 	                                       frame_ctx.state->camera.position,
 	                                       frame_ctx.state->proj.focal_len,
-	                                       frame_ctx.state->proj.near_eps);
+	                                       frame_ctx.state->proj.near_eps,
+	                                       FORWARD_LOOKING_SIGN);
 	p.x = std::lroundf((unit)frame_ctx.state->vp.mid_pos.x + projected.get(X_));
 	p.y = std::lroundf((unit)frame_ctx.state->vp.mid_pos.y - projected.get(Y_));
 	DBG("project: p.x: " << DEC(p.x, 4) << ", p.y: " << DEC(p.y, 4));
@@ -944,7 +946,7 @@ void polygon::draw(frame_context& frame_ctx)
 
 	_draw_ctx->clear_scratch_pad();
 	for (const auto& v : _points) {
-		_draw_ctx->transform(frame_ctx, v, t, _force);
+		_draw_ctx->transform(frame_ctx, v, t, FORWARD_LOOKING_SIGN, _force);
 		_draw_ctx->project(frame_ctx, t, p);
 		_draw_ctx->_scratch_pad.push_back(p);
 	}
@@ -995,7 +997,8 @@ void polygon::update(matrix& m_trans, matrix& m_rot, frame_context& frame_ctx)
 	unit light_angle = lambert(normal, L);
 	unit intensity = std::abs(light_angle) * atten;
 	if ((intensity > EPSILON) || _force) {
-		_depth = fill.get(Z_);
+		dist = fill - frame_ctx.state->camera.position;
+		_depth = vector_3::dot(dist, dist);
 		_draw_ctx->make_color(std::abs(intensity));
 		frame_ctx.draw_vec->push_back(this);
 	}
